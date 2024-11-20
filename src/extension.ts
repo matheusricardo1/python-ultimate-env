@@ -33,7 +33,7 @@ async function activateVirtualEnv(scriptPath: string): Promise<void> {
     const clearCommand = isWindows ? 'cls' : 'clear';
     setTimeout(() => {
       terminal.sendText(clearCommand, true);
-    }, 500); // Aguarda 500ms para garantir que o ambiente foi ativado antes de limpar
+    }, 1); // Aguarda 1ms para garantir que o ambiente foi ativado antes de limpar
 
     vscode.window.showInformationMessage('Ambiente virtual ativado ✅');
   } catch (error) {
