@@ -1,0 +1,10 @@
+{
+  "displayName": "Python Ultimate Env",
+  "description": "A extensão definitiva para ativar automaticamente seu ambiente virtual Python.",
+  "configurationTitle": "Python Ultimate Env",
+  "activationPreference.description": "Define como a extensão deve lidar com a ativação do ambiente virtual Python.",
+  "activationPreference.enum.always": "Ativar automaticamente em todos os terminais futuros.",
+  "activationPreference.enum.ask": "Perguntar ao usuário se deseja ativar o ambiente virtual.",
+  "activationPreference.enum.never": "Nunca ativar o ambiente virtual automaticamente."
+}
+  
