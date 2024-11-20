@@ -5,18 +5,11 @@
     "name": "Matheus Ricardo O. Lima",
     "email": "matheusricardo164@gmail.com"
   },
-  "displayName": "Python Ultimate Env",
-  "description": "The Ultimate Extension to Auto Activate your Python Virtual Environment.",
+  "displayName": "%displayName%",
+  "description": "%description%",
   "categories": ["Linters", "Programming Languages", "Snippets", "Other"],
-  "keywords": [
-    "venv",
-    "env",
-    "python",
-    "django",
-    "activate"
-  ],
+  "keywords": ["venv", "env", "python", "django", "activate"],
   "icon": "img/icon.png",
-  
   "license": "MIT",
   "homepage": "https://github.com/matheusricardo1/python-ultimate-env",
   "repository": {
@@ -27,23 +20,22 @@
   "engines": {
     "vscode": "^1.95.0"
   },
-
   "activationEvents": ["*"],
   "main": "./out/extension.js",
   "contributes": {
     "configuration": {
       "type": "object",
-      "title": "Python Ultimate Env",
+      "title": "%configurationTitle%",
       "properties": {
         "pythonUltimateEnv.activationPreference": {
           "type": "string",
           "enum": ["always", "ask", "never"],
           "default": "ask",
-          "description": "Define como a extensão deve lidar com a ativação do ambiente virtual Python.",
+          "description": "%activationPreference.description%",
           "enumDescriptions": {
-            "always": "Ativar automaticamente em todos os terminais futuros.",
-            "ask": "Perguntar ao usuário se deseja ativar o ambiente virtual.",
-            "never": "Nunca ativar o ambiente virtual automaticamente."
+            "always": "%activationPreference.enum.always%",
+            "ask": "%activationPreference.enum.ask%",
+            "never": "%activationPreference.enum.never%"
           }
         }
       }

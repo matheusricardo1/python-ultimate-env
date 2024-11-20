@@ -1,0 +1,9 @@
+{
+  "displayName": "Python Ultimate Env",
+  "description": "The Ultimate Extension to Auto Activate your Python Virtual Environment.",
+  "configurationTitle": "Python Ultimate Env",
+  "activationPreference.description": "Define how the extension should handle Python virtual environment activation.",
+  "activationPreference.enum.always": "Automatically activate in all future terminals.",
+  "activationPreference.enum.ask": "Ask the user if they want to activate the virtual environment.",
+  "activationPreference.enum.never": "Never automatically activate the virtual environment."
+}
