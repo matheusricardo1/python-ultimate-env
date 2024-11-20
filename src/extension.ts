@@ -1,19 +1,42 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
+import * as fs from 'fs';
 
 let activatedTerminals = new Map<vscode.Terminal, string>();
 let activateInAllTerminals = false; // Controle global para ativação automática em todos os terminais
 
-async function findActivateScript(): Promise<string | null> {
-  const scriptName = 'Activate.ps1';
-  const files = await vscode.workspace.findFiles(`**/${scriptName}`);
+async function findActivateScriptInWorkspace(): Promise<string | null> {
+  const workspaceFolders = vscode.workspace.workspaceFolders;
 
-  if (files.length > 0) {
-    console.log('Arquivo(s) encontrado(s):', files.map(file => file.fsPath));
-    return files[0].fsPath; // Retorna o primeiro encontrado
-  } else {
-    console.log('Nenhum arquivo Activate.ps1 encontrado.');
+  if (!workspaceFolders || workspaceFolders.length === 0) {
+    console.log('Nenhuma pasta aberta no workspace.');
     return null;
   }
+
+  const rootPath = workspaceFolders[0].uri.fsPath;
+
+  // Listar as subpastas diretamente dentro da pasta raiz
+  const subfolders = fs.readdirSync(rootPath, { withFileTypes: true })
+    .filter(dirent => dirent.isDirectory())
+    .map(dirent => path.join(rootPath, dirent.name));
+
+  for (const subfolder of subfolders) {
+    // Verifica se existe o arquivo pyvenv.cfg dentro da subpasta
+    const pyvenvPath = path.join(subfolder, 'pyvenv.cfg');
+    if (!fs.existsSync(pyvenvPath)) {
+      continue; // Não é um ambiente virtual válido
+    }
+
+    // Verifica se existe a pasta Scripts com Activate.ps1
+    const scriptsPath = path.join(subfolder, 'Scripts', 'Activate.ps1');
+    if (fs.existsSync(scriptsPath)) {
+      console.log(`Ambiente virtual encontrado: ${scriptsPath}`);
+      return scriptsPath;
+    }
+  }
+
+  console.log('Nenhum ambiente virtual válido encontrado na primeira camada de subpastas.');
+  return null;
 }
 
 async function activateVirtualEnv(scriptPath: string): Promise<void> {
@@ -33,7 +56,7 @@ async function activateVirtualEnv(scriptPath: string): Promise<void> {
     const clearCommand = isWindows ? 'cls' : 'clear';
     setTimeout(() => {
       terminal.sendText(clearCommand, true);
-    }, 1); // Aguarda 1ms para garantir que o ambiente foi ativado antes de limpar
+    }, 500); // Aguarda 500ms para garantir que o ambiente foi ativado antes de limpar
 
     vscode.window.showInformationMessage('Ambiente virtual ativado ✅');
   } catch (error) {
@@ -44,20 +67,26 @@ async function activateVirtualEnv(scriptPath: string): Promise<void> {
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const disposableOnDidOpenTerminal = vscode.window.onDidOpenTerminal(
     async (terminal: vscode.Terminal) => {
-      const scriptPath = await findActivateScript();
+      const scriptPath = await findActivateScriptInWorkspace();
 
       if (!scriptPath) {
-        //vscode.window.showWarningMessage('Nenhum Activate.ps1 encontrado no workspace.');
-        return;
+        return; // Se não encontrar, não faz nada
       }
 
-      if (activateInAllTerminals) {
+	  const config = vscode.workspace.getConfiguration('pythonUltimateEnv');
+      const activationPreference = config.get<string>('activationPreference', 'ask');
+
+      if (activationPreference === 'never') {
+        return; 
+      }
+
+      if (activateInAllTerminals || activationPreference === 'always') {
         // Ativar automaticamente em todos os terminais futuros
         await activateVirtualEnv(scriptPath);
         return;
       }
 
-      // Pergunta ao usuário o que deseja fazer
+      // Pergunta ao usuário se deseja ativar o ambiente virtual
       const response = await vscode.window.showInformationMessage(
         'Ambiente Virtual Python Detectado. O que você deseja fazer?',
         'Ativar em Todos os Terminais Futuros',
@@ -66,10 +95,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       );
 
       if (response === 'Ativar em Todos os Terminais Futuros') {
-		activateInAllTerminals = true; // Configura ativação automática para terminais futuros
+        activateInAllTerminals = true; // Configura ativação automática para terminais futuros
         await activateVirtualEnv(scriptPath);
       } else if (response === 'Ativar Somente Neste Terminal') {
-        // Configura ativação automática para terminais futuros
         await activateVirtualEnv(scriptPath);
       } else {
         vscode.window.showInformationMessage('Ativação do ambiente virtual cancelada.');

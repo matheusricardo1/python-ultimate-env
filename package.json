@@ -1,13 +1,33 @@
 {
   "name": "python-ultimate-env",
-  "publisher": "matheus",
-  "displayName": "python_ultimate_env",
-  "description": "",
-  "version": "0.0.1",
+  "publisher": "MatheusRicardo",
+  "author": {
+    "name": "Matheus Ricardo O. Lima",
+    "email": "matheusricardo164@gmail.com"
+  },
+  "displayName": "Python Ultimate Env",
+  "description": "The Ultimate Extension to Auto Activate your Python Virtual Environment.",
+  "categories": ["Linters", "Programming Languages", "Snippets", "Other"],
+  "keywords": [
+    "venv",
+    "env",
+    "python",
+    "django",
+    "activate"
+  ],
+  "icon": "img/icon.png",
+  
+  "license": "MIT",
+  "homepage": "https://github.com/matheusricardo1/python-ultimate-env",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/matheusricardo1/python-ultimate-env.git"
+  },
+  "version": "1.0.1",
   "engines": {
     "vscode": "^1.95.0"
   },
-  "categories": ["Linters", "Programming Languages"],
+
   "activationEvents": ["*"],
   "main": "./out/extension.js",
   "contributes": {
@@ -17,13 +37,13 @@
       "properties": {
         "pythonUltimateEnv.activationPreference": {
           "type": "string",
-          "enum": ["never", "ask", "always"],
+          "enum": ["always", "ask", "never"],
           "default": "ask",
-          "description": "Escolha como a extensão deve lidar com a ativação do ambiente virtual Python.",
+          "description": "Define como a extensão deve lidar com a ativação do ambiente virtual Python.",
           "enumDescriptions": {
-            "never": "Nunca ativar o ambiente virtual automaticamente.",
+            "always": "Ativar automaticamente em todos os terminais futuros.",
             "ask": "Perguntar ao usuário se deseja ativar o ambiente virtual.",
-            "always": "Sempre ativar o ambiente virtual automaticamente."
+            "never": "Nunca ativar o ambiente virtual automaticamente."
           }
         }
       }
