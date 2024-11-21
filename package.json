@@ -25,18 +25,23 @@
   "contributes": {
     "configuration": {
       "type": "object",
-      "title": "%configurationTitle%",
+      "title": "Python Ultimate Env",
       "properties": {
         "pythonUltimateEnv.activationPreference": {
           "type": "string",
           "enum": ["always", "ask", "never"],
           "default": "ask",
-          "description": "%activationPreference.description%",
+          "description": "Define how the extension should handle Python virtual environment activation.",
           "enumDescriptions": {
-            "always": "%activationPreference.enum.always%",
-            "ask": "%activationPreference.enum.ask%",
-            "never": "%activationPreference.enum.never%"
+            "always": "Automatically activate in all future terminals.",
+            "ask": "Ask the user if they want to activate the virtual environment.",
+            "never": "Never automatically activate the virtual environment."
           }
+        },
+        "pythonUltimateEnv.showDetailNotification": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show detailed notifications for activation and errors."
         }
       }
     }
